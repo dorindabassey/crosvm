@@ -171,9 +171,6 @@ fn build_and_probe_virglrenderer(out_dir: &Path) -> Result<()> {
         platforms.push("glx");
     }
 
-    // Ensures minigbm is available and that it's pkgconfig is locatable
-    minigbm()?;
-
     let mut setup = Command::new("meson");
     setup
         .arg("setup")
@@ -221,10 +218,6 @@ fn build_and_probe_virglrenderer(out_dir: &Path) -> Result<()> {
 }
 
 fn virglrenderer() -> Result<()> {
-    if use_system_virglrenderer() && !use_system_minigbm() {
-        bail!("Must use system minigbm if using system virglrenderer (try setting CROSVM_USE_SYSTEM_MINIGBM=1)");
-    }
-
     // Use virglrenderer package from pkgconfig on ChromeOS builds
     if use_system_virglrenderer() {
         let lib = pkg_config::Config::new()
